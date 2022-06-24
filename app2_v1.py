@@ -5,7 +5,7 @@ from numpy import number
 from requests import options
 
 st.set_page_config(
-     page_title="Ex-stream-ly Cool App",
+     page_title="Financial tools",
      page_icon="🧊",
      layout="centered"
     #  initial_sidebar_state="expanded",
