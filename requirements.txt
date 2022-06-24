@@ -1,2 +1,2 @@
-https://github.com/SomePackage.git@v1.1.0#egg=SomePackage
+git+https://github.com/SomePackage.git@main#egg=SomePackage
 streamlit==0.75.0
