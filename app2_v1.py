@@ -4,6 +4,18 @@ import numpy_financial as npf
 from numpy import number
 from requests import options
 
+st.set_page_config(
+     page_title="Ex-stream-ly Cool App",
+     page_icon="🧊",
+     layout="centered"
+    #  initial_sidebar_state="expanded",
+    #  menu_items={
+    #      'Get Help': 'https://www.extremelycoolapp.com/help',
+    #      'Report a bug': "https://www.extremelycoolapp.com/bug",
+    #      'About': "# This is a header. This is an *extremely* cool app!"
+    #}
+ )
+
 header = st.container()
 dataset = st.container()
 
@@ -12,10 +24,10 @@ with header:
     st.write("""Here you can find out what the interest and payments are during the term of your loan. 
     Remember that it is the analysis when your credit is fixed rate and fixed payment""")
     sel_col, disp_col = st.columns(2)
+    type_periods = sel_col.selectbox("Period type?", options=['A','M'], index=0)
     n_pay = int(sel_col.number_input('How many periods?'))
-    type_periods = disp_col.selectbox("Period type?", options=['A','M'], index=0)
-    rate = sel_col.number_input('what is the interest rate? (%)')
     type_rate = disp_col.selectbox("Rate type?", options=['EM','EA','NM','NA'], index=0)
+    rate = disp_col.number_input('what is the interest rate? (%)')
     loan = int(sel_col.number_input('what is the value of the loan?'))
 
     rate = rate/100
