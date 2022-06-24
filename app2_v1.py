@@ -1,14 +1,11 @@
 import streamlit as st
 import pandas as pd
 import numpy_financial as npf
-import numpy as np
 from numpy import number
 from requests import options
 
 header = st.container()
 dataset = st.container()
-#features = st.container()
-#model_training = st.container()
 
 with header:
     st.title('Create an amortization table for your loan')
@@ -82,11 +79,3 @@ with dataset:
         st.write('EA' , round(rate_EA*100,2),'%')
         st.write('NM' , round(rate_NM*100,2),'%')
         st.write('NA' , round(rate_NA*100,2),'%')
-    
-
-
-# with features:
-#     st.header('contenedor features')
-
-# with model_training:
-#     st.header('contenedor model traning')
