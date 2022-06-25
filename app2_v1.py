@@ -1,25 +1,22 @@
+from tkinter import Button
 import streamlit as st
 import pandas as pd
 import numpy_financial as npf
+import numpy as np
 from numpy import number
 from requests import options
 
 st.set_page_config(
      page_title="Financial tools",
-     page_icon="🧊",
+     page_icon="FT",
      layout="centered"
-    #  initial_sidebar_state="expanded",
-    #  menu_items={
-    #      'Get Help': 'https://www.extremelycoolapp.com/help',
-    #      'Report a bug': "https://www.extremelycoolapp.com/bug",
-    #      'About': "# This is a header. This is an *extremely* cool app!"
-    #}
  )
 
 header = st.container()
 dataset = st.container()
 
 with header:
+    #recolecta de datos
     st.title('Create an amortization table for your loan')
     st.write("""Here you can find out what the interest and payments are during the term of your loan. 
     Remember that it is the analysis when your credit is fixed rate and fixed payment""")
@@ -29,7 +26,9 @@ with header:
     type_rate = disp_col.selectbox("Rate type?", options=['EM','EA','NM','NA'], index=0)
     rate = disp_col.number_input('what is the interest rate? (%)')
     loan = int(sel_col.number_input('what is the value of the loan?'))
+    cap_pay = sel_col.selectbox("Amortization fee? (Capital payments)", options=['no','yes'], index=0)
 
+    #preparacion de los datos, se estandarizan, a visual mensual y con interes efectivo mensual
     rate = rate/100
 
     if type_periods == 'A':
@@ -66,28 +65,66 @@ with header:
     pay = round(npf.pmt(rate_EM, n_pay, -loan, 0), 0)
 
 with dataset:
-    if st.button('calculate'):
-        st.write('at the end of the period, this will be the total amount paid',loan_final)
-        st.write('the monthly fee payable is' , pay)
-        st.write('#### Amortization table')
-        
-        datos=[]
-        balance = loan
+    if cap_pay == 'yes':
+        if n_pay == 0:
+            st.write('Missing values to assign, please check the periods')
+        else:
+            valido = 'yes'
+            n_extra_pay = int(sel_col.selectbox("in which month do you want to add extra fee?", np.arange(1, n_pay+1, 1)))
+            extra_pay = int(sel_col.number_input('what is the value of the extra fee?'))
+    else:
+        if n_pay == 0:
+            st.write('Missing values to assign, please check the periods')
+        else:
+            valido = 'yes'
+            n_extra_pay = 0
 
-        for i in range(1, n_pay+1):
-            pay_capital = npf.ppmt(rate_EM, i, n_pay, -loan, 0)
-            interest = pay - pay_capital
-            balance -= pay_capital  
-            line = [i, format(pay, '0,.0f'), format(pay_capital, '0,.0f'), format(interest, '0,.0f'), format(balance, '0,.0f')]
-            datos.append(line)
-        
-        df_datos = pd.DataFrame(datos)
-        df_datos.columns = ['Periods', 'Payment', 'Capital', 'interest', 'balance']
-        df_datos = df_datos.set_index('Periods')
-        st.dataframe(df_datos, width=None, height=None)
 
-        st.write('#### Rate conversions')
-        st.write('EM' , round(rate_EM*100,2),'%')
-        st.write('EA' , round(rate_EA*100,2),'%')
-        st.write('NM' , round(rate_NM*100,2),'%')
-        st.write('NA' , round(rate_NA*100,2),'%')
+    if valido == 'yes':
+        if st.button('calculate'):
+            if loan == 0 or n_pay == 0:
+                st.write('Missing values to assign, please check the values')
+            else:
+                st.write('at the end of the period, this will be the total amount paid',loan_final)
+                st.write('the monthly fee payable is' , pay)
+                st.write('#### Amortization table')
+                
+                datos=[]
+                balance = loan
+                if n_extra_pay == 0:
+                    for i in range(1, n_pay+1):
+                        pay_capital = npf.ppmt(rate_EM, i, n_pay, -loan, 0)
+                        interest = pay - pay_capital
+                        balance = balance - pay_capital  
+                        line = [i, format(pay, '0,.0f'), format(pay_capital, '0,.0f'), format(interest, '0,.0f'), format(balance, '0,.0f')]
+                        datos.append(line)
+                
+                    df_datos = pd.DataFrame(datos)
+                    df_datos.columns = ['Periods', 'Payment', 'Capital', 'interest', 'balance']
+                else:
+                    for i in range(1, n_pay+1):
+                        pay_capital = npf.ppmt(rate_EM, i, n_pay, -loan, 0)
+                        interest = pay - pay_capital
+                        if i == n_extra_pay:
+                            balance = balance - (pay_capital + extra_pay)
+                            line = [i, format(pay, '0,.0f'), format(pay_capital, '0,.0f'), format(interest, '0,.0f'), format(extra_pay, '0,.0f'), format(balance, '0,.0f')]
+                            datos.append(line)
+                        else:
+                            balance = balance - pay_capital  
+                            extra_pay = 0
+                            line =  [i, format(pay, '0,.0f'), format(pay_capital, '0,.0f'), format(interest, '0,.0f'), format(extra_pay, '0,.0f'), format(balance, '0,.0f')]
+                            datos.append(line)
+                            
+                    df_datos = pd.DataFrame(datos)
+                    df_datos.columns = ['Periods', 'Payment', 'Capital', 'interest','extra', 'balance']
+
+                
+                
+                #df_datos = df_datos.set_index('Periods')
+                st.dataframe(df_datos, width=None, height=None)
+
+                st.write('#### Rate conversions')
+                st.write('EM' , round(rate_EM*100,2),'%')
+                st.write('EA' , round(rate_EA*100,2),'%')
+                st.write('NM' , round(rate_NM*100,2),'%')
+                st.write('NA' , round(rate_NA*100,2),'%')
