@@ -23,10 +23,10 @@ with header:
     sel_col, disp_col = st.columns(2)
     type_periods = sel_col.selectbox("Period type?", options=['A','M'], index=0)
     n_pay = int(sel_col.number_input('How many periods?'))
-    type_rate = disp_col.selectbox("Rate type?", options=['EM','EA','NM','NA'], index=0)
-    rate = disp_col.number_input('what is the interest rate? (%)')
-    loan = int(sel_col.number_input('what is the value of the loan?'))
-    cap_pay = sel_col.selectbox("Amortization fee? (Capital payments)", options=['no','yes'], index=0)
+    type_rate = sel_col.selectbox("Rate type?", options=['EM','EA','NM','NA'], index=0)
+    rate = sel_col.number_input('what is the interest rate? (%)')
+    loan = int(disp_col.number_input('what is the value of the loan?'))
+    cap_pay = disp_col.selectbox("Amortization fee? (Capital payments)", options=['no','yes'], index=0)
 
     #preparacion de los datos, se estandarizan, a visual mensual y con interes efectivo mensual
     rate = rate/100
