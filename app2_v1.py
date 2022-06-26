@@ -65,6 +65,7 @@ with header:
     pay = round(npf.pmt(rate_EM, n_pay, -loan, 0), 0)
 
 with dataset:
+    valido = 'no'
     if cap_pay == 'yes':
         if n_pay == 0:
             st.write('Missing values to assign, please check the periods')
