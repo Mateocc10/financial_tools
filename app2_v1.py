@@ -24,7 +24,7 @@ with header:
     n_pay = int(sel_col.number_input('How many periods?'))
     type_rate = sel_col.selectbox("Rate type?", options=['EM','EA','NM','NA'], index=0)
     rate = sel_col.number_input('what is the interest rate? (%)')
-    loan = int(disp_col.number_input('what is the value of the loan?'))
+    loan = int(sel_col.number_input('what is the value of the loan?'))
     cap_pay = disp_col.selectbox("Extra payments?", options=['no','yes'], index=0)
 
     #preparacion de los datos, se estandarizan, a visual mensual y con interes efectivo mensual
@@ -66,8 +66,8 @@ with header:
 
     if cap_pay == 'yes':
         way_extra = disp_col.selectbox("where go the extra pay?", options=['reduce time','reduce quota'], index=0)
-        n_extra_pay = int(sel_col.selectbox("in which month do you want to add extra fee?", np.arange(1, n_pay+1, 1)))
-        extra_pay = int(sel_col.number_input('what is the value of the extra fee?'))
+        n_extra_pay = int(disp_col.selectbox("in which month do you want to add extra fee?", np.arange(1, n_pay+1, 1)))
+        extra_pay = int(disp_col.number_input('what is the value of the extra fee?'))
         valido = 'yes'
     else:
         n_extra_pay = 0
