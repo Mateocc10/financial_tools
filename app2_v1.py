@@ -66,18 +66,12 @@ with header:
 
     if cap_pay == 'yes':
         way_extra = disp_col.selectbox("where go the extra pay?", options=['reduce time','reduce quota'], index=0)
-        if n_pay == 0:
-            st.write('Missing values to assign, please check the periods')
-        else:
-            valido = 'yes'
-            n_extra_pay = int(sel_col.selectbox("in which month do you want to add extra fee?", np.arange(1, n_pay+1, 1)))
-            extra_pay = int(sel_col.number_input('what is the value of the extra fee?'))
+        n_extra_pay = int(sel_col.selectbox("in which month do you want to add extra fee?", np.arange(1, n_pay+1, 1)))
+        extra_pay = int(sel_col.number_input('what is the value of the extra fee?'))
+        valido = 'yes'
     else:
-        if n_pay == 0:
-            st.write('Missing values to assign, please check the periods')
-        else:
-            valido = 'yes'
-            n_extra_pay = 0
+        n_extra_pay = 0
+        valido = 'yes'
 
 with dataset:
     if st.button('calculate'):
