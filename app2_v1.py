@@ -20,7 +20,7 @@ with header:
     st.write("""Here you can find out what the interest and payments are during the term of your loan. 
     Remember that it is the analysis when your credit is fixed rate and fixed payment""")
     sel_col, disp_col = st.columns(2)
-    type_periods = sel_col.selectbox("Period type?", options=['A','M'], index=0)
+    type_periods = sel_col.selectbox("Period type?", options=['M','A'], index=0)
     n_pay = int(sel_col.number_input('How many periods?'))
     type_rate = sel_col.selectbox("Rate type?", options=['EM','EA','NM','NA'], index=0)
     rate = sel_col.number_input('what is the interest rate? (%)')
@@ -65,6 +65,7 @@ with header:
     valido = 'no'
 
     if cap_pay == 'yes':
+        way_extra = disp_col.selectbox("where go the extra pay?", options=['reduce time','reduce quota'], index=0)
         if n_pay == 0:
             st.write('Missing values to assign, please check the periods')
         else:
